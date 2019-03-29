@@ -1,3 +1,7 @@
+# SupervisedLearning-Regression-LassoRegressionWithOneVariable
+
+This repository consists of implementation of Lasso regression machine learning algorithm with one variable.
+
 1. Linear regression machine learning algorithm falls under supervised learning
 
 2. In Linear regression, we will learn a model to predict a label's value given a set of features that describe the label
