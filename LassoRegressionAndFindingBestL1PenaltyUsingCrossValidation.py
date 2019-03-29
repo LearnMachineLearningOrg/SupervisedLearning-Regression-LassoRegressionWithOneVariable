@@ -66,7 +66,7 @@ print("** Preview the dataSet and look at the statistics of the dataSet **")
 previewData(dataSet)
 getStatisticsOfData(dataSet)
 
-#In this example we will be performing the Ridge regression to compute the model
+#In this example we will be performing the Lasso regression to compute the model
 #that will be used to predict the sales given the information about how much 
 #marketing was performed using different channels like TV, Radio and Newspaper
 
@@ -80,36 +80,36 @@ featuresForTraining, featuresForTesting, labelForTraining, labelForTesting = tra
 
 #This is the tuning parameter to balance the fit of data and 
 #magnitude of coefficients
-#Here we use multiple alpha values with which we perform the Ridge regression
+#Here we use multiple alpha values with which we perform the Lasso regression
 #and select the best value for alpha using cross validation 
-alpha = [1e-15, 1e-10, 1e-8, 1e-4, 1e-3,1e-2, 1, 5, 10, 20]
+alpha = [1, 5, 10, 20, 25, 30, 35, 40, 45, 50]
 parameters = {'alpha': alpha}
 
 #Importing the GridSearchCV, which is a model evaluation tool that uses 
 #cross-validation. It rely on an internal scoring strategy for evaluating 
 #the quality of a model’s predictions
 from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
 
-#Defining the Ridge regressor, which will be used to compute the model using
-#Ridge regression
-ridge = Ridge()
-ridge_regressor = GridSearchCV(ridge, parameters, scoring='neg_mean_squared_error', cv=5)
-ridge_regressor.fit(featuresForTraining, labelForTraining)
-print ('Ridge Regression - Best L2 penalty identified using cross validation is: ', ridge_regressor.best_params_)
-print ('Ridge Regression - Negative mean square error is: ', ridge_regressor.best_score_)
+#Defining the Lasso regressor, which will be used to compute the model using
+#Lasso regression
+lasso = Lasso()
+lasso_regressor = GridSearchCV(lasso, parameters, scoring='neg_mean_squared_error', cv = 5)
+lasso_regressor.fit(featuresForTraining, labelForTraining)
+print ('Lasso Regression - Best L1 penalty identified using cross validation is: ', lasso_regressor.best_params_)
+print ('Lasso Regression - Negative mean square error is: ', lasso_regressor.best_score_)
 
 #Predicting the prices
-predictionsFromRidgeRegression = ridge_regressor.predict(featuresForTesting)
+predictionsFromLassoRegression = lasso_regressor.predict(featuresForTesting)
 #Calculating the Mean of the squared error
 from sklearn.metrics import mean_squared_error
-print ("Ridge Regression - Mean squared error: ", 
-       mean_squared_error(labelForTesting, predictionsFromRidgeRegression))
+print ("Lasso Regression - Mean squared error: ", 
+       mean_squared_error(labelForTesting, predictionsFromLassoRegression))
 
 #Finding out the accuracy of the model
 from sklearn.metrics import r2_score
-accuracyMeassure = r2_score(labelForTesting, predictionsFromRidgeRegression)
-print ("Ridge Regression - Accuracy of model is {} %".format(accuracyMeassure*100))
+accuracyMeassure = r2_score(labelForTesting, predictionsFromLassoRegression)
+print ("Lasso Regression - Accuracy of model is {} %".format(accuracyMeassure*100))
 
 #Visualizing the training Test Results 
 #Scatter plot the training dataset
@@ -117,8 +117,8 @@ plot.scatter(featuresForTraining, labelForTraining, color= 'green', marker='+')
 #Scatter plot the test dataset
 plot.scatter(featuresForTesting, labelForTesting, color= 'blue', marker='+')
 #Plot the regression line
-plot.plot(featuresForTesting, predictionsFromRidgeRegression, color = 'red')
-plot.title ("Visuals for Ridge Regression")
+plot.plot(featuresForTesting, predictionsFromLassoRegression, color = 'red')
+plot.title ("Visuals for Lasso Regression")
 plot.xlabel("Marketing Via TV")
 plot.ylabel("Sales")
 plot.show()
